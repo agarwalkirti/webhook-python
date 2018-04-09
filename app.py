@@ -22,6 +22,7 @@ from urllib.parse import urlparse, urlencode
 from urllib.request import urlopen, Request
 from urllib.error import HTTPError
 
+import datetime
 import json
 import os
 
@@ -52,11 +53,15 @@ def webhook():
 def processRequest(req):
     if req.get("result").get("action") != "trainStatus":
         return {}
-    baseurl = "https://api.railwayapi.com/v2/live/train/17229/date/05-04-2018/apikey/e5hkcdzqsj/"
+    baseurl = "https://api.railwayapi.com/v2/live/train/" 
+    i = datetime.datetime.now()
+    today = i.day +"-"+ i.month +"-"+ i.year
+    return today
+    remain = "/date/"+today+"/apikey/e5hkcdzqsj/"
     yql_query = makeYqlQuery(req)
     if yql_query is None:
         return {}
-    yql_url = baseurl
+    yql_url = baseurl + yql_query + remain
     result = urlopen(yql_url).read()
     data = json.loads(result)
     res = makeWebhookResult1(data)
@@ -78,11 +83,11 @@ def makeWebhookResult1(data):
 def makeYqlQuery(req):
     result = req.get("result")
     parameters = result.get("parameters")
-    city = parameters.get("geo-city")
-    if city is None:
+    trainnum = parameters.get("Train")
+    if trainnum is None:
         return None
 
-    return "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + city + "')"
+    return trainnum
 
 
 def makeWebhookResult(data):
