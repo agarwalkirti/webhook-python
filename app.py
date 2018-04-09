@@ -40,14 +40,46 @@ def webhook():
 
     print("Request:")
     print(json.dumps(req, indent=4))
-
-    res = processRequest(req)
-
+    if req.get("result").get("action") == "trainStatus":
+        res = processRequest(req)
+    if req.get("result").get("action") == "trainRoute":
+        res = processRoute(req)
+    if req.get("result").get("action") == "stationCode":
+        res = processCode(req)
     res = json.dumps(res, indent=4)
     # print(res)
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
+
+def processCode(req):
+    if req.get("result").get("action") != "stationCode":
+        return {}
+    baseurl = "https://api.railwayapi.com/v2/name-to-code/station/"
+    remain = "/apikey/e5hkcdzqsj"
+    yql_query = makeQueryForPlace(req)
+    if yql_query is None:
+        return {}
+    yql_url = baseurl + yql_query + remain
+    result = urlopen(yql_url).read()
+    data = json.loads(result)
+    res = makeWebhookResult3(data)
+    return res
+
+
+def processRoute(req):
+    if req.get("result").get("action") != "trainRoute":
+        return {}
+    baseurl = "https://api.railwayapi.com/v2/route/train/"
+    remain = "/apikey/e5hkcdzqsj"
+    yql_query = makeYqlQuery(req)
+    if yql_query is None:
+        return {}
+    yql_url = baseurl + yql_query + remain
+    result = urlopen(yql_url).read()
+    data = json.loads(result)
+    res = makeWebhookResult2(data)
+    return res
 
 
 def processRequest(req):
@@ -58,7 +90,7 @@ def processRequest(req):
     day = i.day 
     month = i.month 
     year = i.year
-    today = "09-04-2018"
+    today = "10-04-2018"
     remain = "/date/"+today+"/apikey/e5hkcdzqsj/"
     yql_query = makeYqlQuery(req)
     if yql_query is None:
@@ -69,11 +101,37 @@ def processRequest(req):
     res = makeWebhookResult1(data)
     return res
 
+
 def makeWebhookResult1(data):
 
     speech = data.get('position')
-    print("Response:")
-    print(speech)
+    return {
+        "speech": speech,
+        "displayText": speech,
+        # "data": data,
+        # "contextOut": [],
+        "source": "webhook-dm"
+    }
+def makeWebhookResult2(data):
+
+#     speech = data.get('position')
+    speech = ""
+    for routes in data['route']:
+        speech =  speech +  routes['station']['name'] + "->"
+    return {
+        "speech": speech,
+        "displayText": speech,
+        # "data": data,
+        # "contextOut": [],
+        "source": "webhook-dm"
+    }
+
+def makeWebhookResult3(data):
+
+#     speech = data.get('position')
+    speech = ""
+    for station in data['stations']:
+        speech =  speech +  station['name'] +" - "+ station['code'] + "\t\t\t\t\t"
     return {
         "speech": speech,
         "displayText": speech,
@@ -83,11 +141,18 @@ def makeWebhookResult1(data):
     }
 
 
-
 def makeYqlQuery(req):
     result = req.get("result")
     parameters = result.get("parameters")
     trainnum = parameters.get("Train")
+    if trainnum is None:
+        return None
+
+    return trainnum
+def makeQueryForPlace(req):
+    result = req.get("result")
+    parameters = result.get("parameters")
+    trainnum = parameters.get("place")
     if trainnum is None:
         return None
 
@@ -140,3 +205,4 @@ if __name__ == '__main__':
     print("Starting app on port %d" % port)
 
     app.run(debug=False, port=port, host='0.0.0.0')
+
