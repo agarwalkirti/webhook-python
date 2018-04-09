@@ -57,7 +57,7 @@ def processRequest(req):
     i = datetime.datetime.now()
     today = i.day +"-"+ i.month +"-"+ i.year
     return today
-    remain = "/date/"+today+"/apikey/e5hkcdzqsj/"
+    remain = "/date/09-04-2018/apikey/e5hkcdzqsj/"
     yql_query = makeYqlQuery(req)
     if yql_query is None:
         return {}
