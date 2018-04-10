@@ -146,7 +146,6 @@ def makeWebhookResult2(data):
 
 def makeWebhookResult3(data):
 
-#     speech = data.get('position')
     speech = ""
     for station in data['stations']:
         speech =  speech + station['name'] +"  -  "+ station['code'] + "\n"
@@ -160,9 +159,12 @@ def makeWebhookResult3(data):
 
 
 def makeWebhookResult5(data):
+    
     speech = ""
     for code in data['trains']:
-        speech =  speech + trains['name'] +"is with scheduled arrival of "+ trains['scharr'] +" and scheduled departure of "+ trains['actdep'] +"Live Status of train is"+ trains['delaydep'] "\n"
+        speech =  speech + code['name'] +"is with scheduled arrival of "+ 
+        code['scharr'] +" and scheduled departure of "+ code['schdep'] +
+        "with live status of train as"+ code['delaydep'] "\n"
     return {
         "speech": speech,
         "displayText": speech,
