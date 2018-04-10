@@ -46,6 +46,8 @@ def webhook():
         res = processRoute(req)
     if req.get("result").get("action") == "stationCode":
         res = processCode(req)
+    if req.get("result").get("action") == "trainArrival":
+        res = processArrival(req)
     res = json.dumps(res, indent=4)
     # print(res)
     r = make_response(res)
@@ -66,6 +68,20 @@ def processCode(req):
     result = urlopen(yql_url).read()
     data = json.loads(result)
     res = makeWebhookResult3(data)
+    return res
+
+def processArrival(req):
+    if req.get("result").get("action") != "trainArrival":
+        return {}
+    baseurl = "https://api.railwayapi.com/v2/arrivals/station/"
+    remain = "/hours/4/apikey/e5hkcdzqsj"
+    yql_query = makeYqlQueryArrival(req)
+    if yql_query is None:
+        return {}
+    yql_url = baseurl + yql_query + remain
+    result = urlopen(yql_url).read()
+    data = json.loads(result)
+    res = makeWebhookResult5(data)
     return res
 
 
@@ -133,7 +149,7 @@ def makeWebhookResult3(data):
 #     speech = data.get('position')
     speech = ""
     for station in data['stations']:
-        speech =  speech + station['name'] +"  -  "+ station['code'] + "/\n/g"
+        speech =  speech + station['name'] +"  -  "+ station['code'] + "\n"
     return {
         "speech": speech,
         "displayText": speech,
@@ -143,14 +159,34 @@ def makeWebhookResult3(data):
     }
 
 
+def makeWebhookResult5(data):
+    speech = ""
+    for code in data['trains']:
+        speech =  speech + trains['name'] +"is with scheduled arrival of "+ trains['scharr'] +" and scheduled departure of "+ trains['actdep'] +"Live Status of train is"+ trains['delaydep'] "\n"
+    return {
+        "speech": speech,
+        "displayText": speech,
+        # "data": data,
+        # "contextOut": [],
+        "source": "webhook-dm"
+    }
+
 def makeYqlQuery(req):
     result = req.get("result")
     parameters = result.get("parameters")
     trainnum = parameters.get("Train")
     if trainnum is None:
         return None
-
     return trainnum
+
+def makeYqlQueryArrival(req):
+    result = req.get("result")
+    parameters = result.get("parameters")
+    traincode = parameters.get("Station_code_letters")
+    if traincode is None:
+        return None
+    return traincode
+
 def makeQueryForPlace(req):
     result = req.get("result")
     parameters = result.get("parameters")
