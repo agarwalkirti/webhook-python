@@ -164,7 +164,7 @@ def makeWebhookResult5(data):
     for code in data['trains']:
         speech =  speech + code['name'] +"is with scheduled arrival of "+ 
         code['scharr'] +" and scheduled departure of "+ code['schdep'] +
-        "with delayed departure of train as"+ code['delaydep'] + "\n"
+        "with delayed departure of train as"+ code['delaydep']
     return {
         "speech": speech,
         "displayText": speech,
