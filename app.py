@@ -244,13 +244,13 @@ def makeWebhookResultForBtwnStations(data):
 #         code['scharr'] +" and scheduled departure of "+ code['schdep'] +
 #         "with delayed departure of train as"+ code['delaydep']
     speech= "hai"
-    return {
-        "speech": speech,
-        "displayText": speech,
-        # "data": data,
-        # "contextOut": [],
-        "source": "webhook-dm"
-    }
+    return speech
+#     "speech": speech,
+#         "displayText": speech,
+#         # "data": data,
+#         # "contextOut": [],
+#         "source": "webhook-dm"
+#     }
 # ------------------------------------query parameter extracting functions---------------------------------------------------
 
 
