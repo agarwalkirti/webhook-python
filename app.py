@@ -126,9 +126,9 @@ def processArrival(req):
         return {}
     baseurl = "https://api.railwayapi.com/v2/arrivals/station/GZB/hours/4/apikey/0v40s8kpt1"
    # remain = "/hours/4/apikey/0v40s8kpt1"
-    yql_query = makeYqlQueryArrival(req)
-    if yql_query is None:
-        return {}
+    #yql_query = makeYqlQueryArrival(req)
+    #if yql_query is None:
+   #     return {}
     #yql_url = baseurl + yql_query + remain
     yql_url = baseurl
     result = urlopen(yql_url).read()
@@ -239,10 +239,11 @@ def makeWebhookResultForBtwnStations(data):
 
  def makeWebhookResult5(data): 
     speech = ""
-    for code in data['trains']:
-        speech =  speech + code['name'] +"is with scheduled arrival of "+ 
-        code['scharr'] +" and scheduled departure of "+ code['schdep'] +
-        "with delayed departure of train as"+ code['delaydep']
+#     for code in data['trains']:
+#         speech =  speech + code['name'] +"is with scheduled arrival of "+ 
+#         code['scharr'] +" and scheduled departure of "+ code['schdep'] +
+#         "with delayed departure of train as"+ code['delaydep']
+    speech= "hai"
     return {
         "speech": speech,
         "displayText": speech,
