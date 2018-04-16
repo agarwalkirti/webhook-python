@@ -52,7 +52,7 @@ def webhook():
         res = processTrainNumber(req)
     if req.get("result").get("action") == "train_btwn_stations":
         res = processTrainBtwnStations(req)   
-    if req.get("result").get("action") == "trainArrival":
+    if req.get("result").get("action") == "arrival":
         res = processArrival(req) 
     res = json.dumps(res, indent=4)
     # print(res)
@@ -122,7 +122,7 @@ def processTrainNumber(req):
     return res
 
 def processArrival(req):
-    if req.get("result").get("action") != "trainArrival":
+    if req.get("result").get("action") != "arrival":
         return {}
     return "abc" 
 #     baseurl = "https://api.railwayapi.com/v2/arrivals/station/GZB/hours/4/apikey/0v40s8kpt1"
