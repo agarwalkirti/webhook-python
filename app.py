@@ -124,6 +124,7 @@ def processTrainNumber(req):
 def processArrival(req):
     if req.get("result").get("action") != "trainArrival":
         return {}
+    return "abc" 
 #     baseurl = "https://api.railwayapi.com/v2/arrivals/station/GZB/hours/4/apikey/0v40s8kpt1"
    # remain = "/hours/4/apikey/0v40s8kpt1"
     #yql_query = makeYqlQueryArrival(req)
@@ -134,7 +135,7 @@ def processArrival(req):
 #     result = urlopen(yql_url).read()
 #     data = json.loads(result)
 #     res = makeWebhookResult5(data)
-    return "abc"
+   
 
 
 def processTrainBtwnStations(req):
