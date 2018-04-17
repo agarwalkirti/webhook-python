@@ -54,6 +54,8 @@ def webhook():
         res = processTrainBtwnStations(req)   
     if req.get("result").get("action") == "arrival":
         res = processArrival(req) 
+    if req.get("result").get("action") == "reschedule":
+        res = processReschedule(req)
     res = json.dumps(res, indent=4)
     # print(res)
     r = make_response(res)
@@ -136,7 +138,21 @@ def processArrival(req):
 #     data = json.loads(result)
 #     res = makeWebhookResult5(data)
    
-
+def processReschedule(req):
+    if req.get("result").get("action") != "reschedule":
+        return {}
+    baseurl = "https://api.railwayapi.com/v2/rescheduled/date/" 
+    today = datetime.date.today().strftime("%d-%m-%Y")
+    remain = today+"/apikey/0v40s8kpt1/"
+    #yql_query = makeYqlQuery(req)
+    #if yql_query is None:
+     #   return {}
+    #yql_url = baseurl + yql_query + remain
+    yql_url = baseurl + remain
+    result = urlopen(yql_url).read()
+    data = json.loads(result)
+    res = makeWebhookResult6(data)
+    return res
 
 def processTrainBtwnStations(req):
     if req.get("result").get("action") != "train_btwn_stations":
@@ -229,6 +245,21 @@ def makeWebhookResultForBtwnStations(data):
     for train in data['trains']:
         speech = speech + train['name'] + ", Starts at "+ train['src_departure_time'] +", Reaches at "+ train['dest_arrival_time'] +","
         msg.append( train['name'] +", Starts at "+ train['src_departure_time'] +", Reaches at "+ train['dest_arrival_time'])
+    messages = [{"type": 0, "speech": s[0]} for s in zip(msg)]
+    reply = {
+            "speech": speech,
+            "displayText": speech,
+            "messages": messages,
+            "source": "webhook-dm"
+            }
+    return reply
+
+def makeWebhookResult6(data):
+    msg = []
+    speech = ""
+    for train in data['trains']:
+        speech = speech + train['name'] +"  -  "+ train['number'] +"  -  "+ train['rescheduled_time'] ", "
+        msg.append(train['name'] +"  -  "+ train['number']+"  -  "+ train['rescheduled_time'])
     messages = [{"type": 0, "speech": s[0]} for s in zip(msg)]
     reply = {
             "speech": speech,
