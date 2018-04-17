@@ -408,7 +408,7 @@ def makeWebhookResult(data):
         "source": "apiai-weather-webhook-sample"
     }
 
-
+#--------- cloud connection-------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
 
