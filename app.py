@@ -211,7 +211,7 @@ def makeWebhookResultArrival(data):
 #     speech = data.get('position')
     speech = ""
     for code in data['trains']:
-        speech =  speech +code['name']
+        speech =  speech +code['name']  +"sch arr:"+ code['scharr'] +"sch dep :"+ code['schdep'] +"delayed dep:"+ code['delaydep']+","
 #    speech = speech.rstrip('>')
     return {
         "speech": speech,
