@@ -54,6 +54,8 @@ def webhook():
         res = processTrainBtwnStations(req)
     if req.get("result").get("action") == "TrainFare":
         res = processTrainFare(req)
+    if req.get("result").get("action") == "arrival":
+        res = processArrival(req)
     res = json.dumps(res, indent=4)
     # print(res)
     r = make_response(res)
@@ -94,6 +96,20 @@ def processRoute(req):
     data = json.loads(result)
     res = makeWebhookResultRoute(data)
     return res
+
+
+#Train Arrival
+def processArrival(req):
+    if req.get("result").get("action") != "arrival":
+        return {}
+    baseurl = "https://api.railwayapi.com/v2/arrivals/station/GZB/hours/4"
+    remain = "/apikey/"+apikey
+    yql_url = baseurl + remain
+    result = urlopen(yql_url).read()
+    data = json.loads(result)
+    res = makeWebhookResultArrival(data)
+    return res
+
 
 # Station Code
 def processCode(req):
@@ -181,6 +197,21 @@ def makeWebhookResultRoute(data):
     speech = ""
     for routes in data['route']:
         speech =  speech +routes['station']['name'] + " -> "
+#    speech = speech.rstrip('>')
+    return {
+        "speech": speech,
+        "displayText": speech,
+        # "data": data,
+        # "contextOut": [],
+        "source": "webhook-dm"
+    }
+
+def makeWebhookResultArrival(data):
+
+#     speech = data.get('position')
+    speech = ""
+    for code in data['trains']:
+        speech =  speech +code['name']
 #    speech = speech.rstrip('>')
     return {
         "speech": speech,
