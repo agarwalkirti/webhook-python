@@ -103,9 +103,8 @@ def processArrival(req):
     if req.get("result").get("action") != "arrival":
         return {}
     baseurl = "https://api.railwayapi.com/v2/arrivals/station/"
-    remain = "/hours/4/apikey/"+apikey
-    stnCode = parameters.get("station_code_name")
-    yql_url = baseurl+"KTYM"+remain
+    remain = "KTYM/hours/4/apikey/"+apikey
+    yql_url = baseurl+remain
     result = urlopen(yql_url).read()
     data = json.loads(result)
     res = makeWebhookResultArrival(data)
