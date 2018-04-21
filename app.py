@@ -102,8 +102,8 @@ def processRoute(req):
 def processArrival(req):
     if req.get("result").get("action") != "arrival":
         return {}
-    baseurl = "https://api.railwayapi.com/v2/arrivals/station/GZB/hours/4"
-    remain = "/apikey/"+apikey
+    baseurl = "https://api.railwayapi.com/v2/arrivals/station/"
+    remain = "GZB/hours/4/apikey/"+apikey
     yql_url = baseurl + remain
     result = urlopen(yql_url).read()
     data = json.loads(result)
