@@ -354,8 +354,8 @@ def processStationName(req):
 def processArrival(req):
     if req.get("result").get("action") != "arrival":
         return {}
-    baseurl = "https://api.railwayapi.com/v2/arrivals/station/"
-    remain = "GZB/hours/4/apikey/"+apikey
+    baseurl = "https://api.railwayapi.com/v2/arrivals/station/GZB/hours/4"
+    remain = "/apikey/"+apikey
     yql_url = baseurl + remain
     result = urlopen(yql_url).read()
     data = json.loads(result)
@@ -365,8 +365,7 @@ def processArrival(req):
 def makeWebhookResultArrival(data):
     speech = ""
     for code in data['trains']:
-        speech =  speech +"Train Name: "code['name']  +" sch arr: "+ code['scharr'] +" sch dep : "+ code['schdep'] +" delayed Status: "+ code['delaydep']+",  "
-#    speech = speech.rstrip('>')
+        speech =  speech +"Train Name: "code['name']  +"sch arr: "+ code['scharr'] +"sch dep : "+ code['schdep'] +"delayed Status: "+ code['delaydep']+",  "
     return {
         "speech": speech,
         "displayText": speech,
