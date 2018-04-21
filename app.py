@@ -105,7 +105,7 @@ def processArrival(req):
     baseurl = "https://api.railwayapi.com/v2/arrivals/station/"
     remain = "/hours/4/apikey/"+apikey
     stnCode = parameters.get("station_code_name")
-    yql_url = baseurl + "KTYM" + remain
+    yql_url = baseurl+"KTYM"+remain
     result = urlopen(yql_url).read()
     data = json.loads(result)
     res = makeWebhookResultArrival(data)
@@ -212,7 +212,7 @@ def makeWebhookResultArrival(data):
 #     speech = data.get('position')
     speech = ""
     for code in data['trains']:
-        speech =  speech +code['name']  +"sch arr :   "+ code['scharr'] +"sch dep :   "+ code['schdep'] +"delayed Status :  "+ code['delaydep']+",  "
+        speech =  speech +code['name']  +"sch arr:"+ code['scharr'] +"sch dep:"+ code['schdep'] +"delayed Status:"+ code['delaydep']+",  "
 #    speech = speech.rstrip('>')
     return {
         "speech": speech,
