@@ -56,6 +56,8 @@ def webhook():
         res = processTrainFare(req)
     if req.get("result").get("action") == "arrival":
         res = processArrival(req)
+    if req.get("result").get("action") == "rescheduledTrain":
+        res = processRescheduledTrains(req)
     res = json.dumps(res, indent=4)
     # print(res)
     r = make_response(res)
@@ -158,6 +160,7 @@ def processRescheduledTrains(req):
             "source": "webhook-dm"
             }
     return reply
+
 # Station Code
 def processCode(req):
     if req.get("result").get("action") != "stationCode":
@@ -442,7 +445,7 @@ def makeWebhookResult(data):
     if condition is None:
         return {}
 
-    # print(json.dumps(item, indent=4))
+    # (json.dumps(item, indent=4))
 
     speech = "Today the weather in " + location.get('city') + ": " + condition.get('text') + \
              ", And the temperature is " + condition.get('temp') + " " + units.get('temperature')
