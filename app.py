@@ -103,7 +103,10 @@ def processArrival(req):
     if req.get("result").get("action") != "arrival":
         return {}
     baseurl = "https://api.railwayapi.com/v2/arrivals/station/"
-    remain = "KTYM/hours/4/apikey/"+apikey
+    result = req.get("result")
+    parameters = result.get("parameters")
+    stnCode = parameters.get("station_code_name")
+    remain = stnCode +"/hours/4/apikey/"+apikey
     yql_url = baseurl+remain
     result = urlopen(yql_url).read()
     data = json.loads(result)
