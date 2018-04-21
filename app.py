@@ -64,8 +64,6 @@ def webhook():
         res = processPNRStatus(req)
     if req.get("result").get("action") == "stationName":
         res = processStationName(req)
-    if req.get("result").get("action") == "arrival":
-        res = processArrival(req)
     res = json.dumps(res, indent=4)
 
     r = make_response(res)
@@ -349,30 +347,8 @@ def processStationName(req):
             "source": "webhook-dm"
             }
     return reply
-
-#Train Arrival
-def processArrival(req):
-    if req.get("result").get("action") != "arrival":
-        return {}
-    baseurl = "https://api.railwayapi.com/v2/arrivals/station/GZB/hours/4"
-    remain = "/apikey/"+apikey
-    yql_url = baseurl + remain
-    result = urlopen(yql_url).read()
-    data = json.loads(result)
-    res = makeWebhookResultArrival(data)
-    return res
+  
 # ----------------------------------------json data extraction functions---------------------------------------------------
-def makeWebhookResultArrival(data):
-    speech = ""
-    for code in data['trains']:
-        speech =  speech +"Train Name: "code['name']  +"sch arr: "+ code['scharr'] +"sch dep : "+ code['schdep'] +"delayed Status: "+ code['delaydep']+",  "
-    return {
-        "speech": speech,
-        "displayText": speech,
-        # "data": data,
-        # "contextOut": [],
-        "source": "webhook-dm"
-    }
 
 def makeWebhookResultStatus(data):
     speech = data.get('position')
