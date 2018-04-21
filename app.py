@@ -362,10 +362,7 @@ def processArrival(req):
     return res  
 # ----------------------------------------json data extraction functions---------------------------------------------------
 def makeWebhookResultArrival(data):
-    speech = ""
-    for code in data['trains']:
-        speech =  speech +"Train Name: "code['name']  +",  "
-#    speech = speech.rstrip('>')
+    speech = "hi"
     return {
         "speech": speech,
         "displayText": speech,
