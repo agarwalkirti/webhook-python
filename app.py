@@ -104,7 +104,7 @@ def processArrival(req):
         return {}
     baseurl = "https://api.railwayapi.com/v2/arrivals/station/"
     remain = "/hours/4/apikey/"+apikey
-    stnCode = parameters.get("station_code_name");
+    stnCode = parameters.get("station_code_name")
     yql_url = baseurl + stnCode + remain
     result = urlopen(yql_url).read()
     data = json.loads(result)
