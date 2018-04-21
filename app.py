@@ -359,7 +359,7 @@ def processArrival(req):
     result = urlopen(yql_url).read()
 
     data = json.loads(result)
-    res='hi';
+    res='hi'
     return res
     #res = makeWebhookResultArrival(data)
     #return res  
