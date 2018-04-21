@@ -357,8 +357,10 @@ def processArrival(req):
     remain = "/apikey/"+apikey
     yql_url = baseurl + remain
     result = urlopen(yql_url).read()
+
     data = json.loads(result)
-    return 'hi';
+    res='hi';
+    return res
     #res = makeWebhookResultArrival(data)
     #return res  
 # ----------------------------------------json data extraction functions---------------------------------------------------
