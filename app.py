@@ -210,19 +210,19 @@ def makeWebhookResultRoute(data):
     }
 
 def makeWebhookResultArrival(data):
-
-#     speech = data.get('position')
+    msg = []
     speech = ""
     for code in data['trains']:
         speech =  speech +code['name']  +"sch arr:"+ code['scharr'] +"sch dep:"+ code['schdep'] +"delayed Status:"+ code['delaydep']+",  "
-#    speech = speech.rstrip('>')
-    return {
-        "speech": speech,
-        "displayText": speech,
-        # "data": data,
-        # "contextOut": [],
-        "source": "webhook-dm"
-    }
+        msg.append(code['name']  +"sch arr:"+ code['scharr'] +"sch dep:"+ code['schdep'] +"delayed Status:"+ code['delaydep']);
+    messages = [{"type": 0, "speech": s[0]} for s in zip(msg)]
+    reply = {
+            "speech": speech,
+            "displayText": speech,
+            "messages": messages,
+            "source": "webhook-dm"
+            }
+    return reply
 
 def makeWebhookResultCode(data):
     msg = []
