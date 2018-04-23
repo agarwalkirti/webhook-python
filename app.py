@@ -36,7 +36,7 @@ app = Flask(__name__)
 
 #----------------------------------------Main Entry Point---------------------------------------------------
 
-apikey = "0v40s8kpt1"
+apikey = "zc4qtk7x4o"
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -220,9 +220,9 @@ def processCancelledTrains(req):
             msg.append( train['name'] + " having train number " + train['number'] + " is cancelled on " + yql_query_date)
             flag = 1
             break
-    if flag == 0:
-        speech = "The train is not cancelled on " + yql_query_date
-        msg.append( "The train is not cancelled on " + yql_query_date)
+        if flag == 0:
+            speech = "The train is not cancelled on " + yql_query_date
+            msg.append( "The train is not cancelled on " + yql_query_date)
     messages = [{"type": 0, "speech": s[0]} for s in zip(msg)]
     reply = {
             "speech": speech,
@@ -356,8 +356,6 @@ def processStationName(req):
 
 #Train Arrival
 def processArrival(req):
-    if req.get("result").get("action") != "arrival":
-        return {}
     baseurl = "https://api.railwayapi.com/v2/arrivals/station/"
     result = req.get("result")
     parameters = result.get("parameters")
@@ -368,9 +366,12 @@ def processArrival(req):
     data = json.loads(result)
     res = makeWebhookResultArrival(data)
     return res
-
+  
+	
 #Train Reschedule
 def processRescheduledTrains(req):
+    a =  json.dumps("HI...") 
+    print("AAAAAA: "+a)
     if req.get("result").get("action") != "rescheduledTrain":
         return {}
     baseurl = "https://api.railwayapi.com/v2/rescheduled"
@@ -378,34 +379,51 @@ def processRescheduledTrains(req):
     yql_query_date  = makeYqlQueryForDat(req)
     if yql_query_date is None:
         yql_query_date = datetime.date.today().strftime("%d-%m-%Y")
-    #get train name or number
-    result = req.get("result")
-    parameters = result.get("parameters")
+    date = "/date/" + yql_query_date
+    c =  json.dumps(date) 
+    print("date: "+c)
     trainvar = ""
-    trainname = parameters.get("Train_name")
+    trainname = "anvt" #parameters.get("Train_name")
     if trainname:
         yql_query_train = trainname
         trainvar = 'name'
-    trainnum = parameters.get("Train_numbers") 
-    if trainnum:
-        yql_query_train = trainnum
-        trainvar = 'number'
-    date = "/date/" + yql_query_date
+#     trainnum = parameters.get("Train_numbers") 
+#     if trainnum:
+#         yql_query_train = trainnum
+#         trainvar = 'number'
+    result = req.get("result")
+    parameters = result.get("parameters")
+    d =  json.dumps(trainvar) 
+    print("train num or name: "+d)
+    m =  json.dumps(yql_query_train) 
+    print("train type: "+m)
     yql_url = baseurl + date + remain
+    b =  json.dumps(yql_url) 
+    print("url: "+b)
     result = urlopen(yql_url).read()
     data = json.loads(result)
     msg = []
     speech = ""
     flag = 0
+    tzbcd =  json.dumps(yql_query_train) 
+    print("Here is tname or num : "+tzbcd)
+    tzbcde =  json.dumps(trainvar) 
+    print("Here is ttype : "+tzbcde)
+    tzbcdef =  json.dumps("END") 
+    print("Here is end : "+tzbcdef)
     for train in data['trains']:
-        if yql_query_train.lower() in train[trainvar].lower():
+        bbb = json.dumps("bla")
+        print("Here is b4 if : "+bbb)
+        if yql_query_train.lower() in train['name'].lower():
             speech = train['name'] + " having train number " + train['number'] + " is rescheduled on " + yql_query_date
             msg.append( train['name'] + " having train number " + train['number'] + " is rescheduled on " + yql_query_date)
-            flag = 1
+            flag = 1   
+            tzbc = json.dumps(speech)
+            print("Here is rescheduled_date : "+tzbc)
             break
     if flag == 0:
-        speech = "The train is not rescheduled on " + yql_query_date
-        msg.append( "The train is not rescheduled on " + yql_query_date)
+        speech = "The train is not cancelled on " + yql_query_date
+        msg.append( "The train is not cancelled on " + yql_query_date)
     messages = [{"type": 0, "speech": s[0]} for s in zip(msg)]
     reply = {
             "speech": speech,
