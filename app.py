@@ -362,7 +362,7 @@ def processArrival(req):
     remain = stnCode +"/hours/4/apikey/"+apikey
     yql_url = baseurl+remain
     c =  json.dumps(yql_url) 
-    print("date: "+c)
+    print("url: "+c)
     result = urlopen(yql_url).read()
     data = json.loads(result)
     res = makeWebhookResultArrival(data)
@@ -384,7 +384,7 @@ def processRescheduledTrains(req):
     c =  json.dumps(date) 
     print("date: "+c)
     trainvar = ""
-    trainname = "anvt" #parameters.get("Train_name")
+    trainname = parameters.get("Train_name")
     if trainname:
         yql_query_train = trainname
         trainvar = 'name'
