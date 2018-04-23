@@ -362,6 +362,8 @@ def processArrival(req):
     stnCode = parameters.get("station_code_name")
     remain = stnCode +"/hours/4/apikey/"+apikey
     yql_url = baseurl+remain
+    c =  json.dumps(yql_url) 
+    print("date: "+c)
     result = urlopen(yql_url).read()
     data = json.loads(result)
     res = makeWebhookResultArrival(data)
