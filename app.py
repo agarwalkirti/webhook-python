@@ -36,7 +36,7 @@ app = Flask(__name__)
 
 #----------------------------------------Main Entry Point---------------------------------------------------
 
-apikey = "zc4qtk7x4o"
+apikey = "0v40s8kpt1"
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -381,9 +381,11 @@ def processRescheduledTrains(req):
     if yql_query_date is None:
         yql_query_date = datetime.date.today().strftime("%d-%m-%Y")
     date = "/date/" + yql_query_date
-    c =  json.dumps(date) 
+    c =  json.dumps(date)
     print("date: "+c)
     trainvar = ""
+    result = req.get("result")
+    parameters = result.get("parameters")
     trainname = parameters.get("Train_name")
     if trainname:
         yql_query_train = trainname
@@ -392,8 +394,6 @@ def processRescheduledTrains(req):
 #     if trainnum:
 #         yql_query_train = trainnum
 #         trainvar = 'number'
-    result = req.get("result")
-    parameters = result.get("parameters")
     d =  json.dumps(trainvar) 
     print("train num or name: "+d)
     m =  json.dumps(yql_query_train) 
@@ -407,9 +407,9 @@ def processRescheduledTrains(req):
     speech = ""
     flag = 0
     tzbcd =  json.dumps(yql_query_train) 
-    print("Here is tname or num : "+tzbcd)
+    print("Here is final tname or num : "+tzbcd)
     tzbcde =  json.dumps(trainvar) 
-    print("Here is ttype : "+tzbcde)
+    print("Here is trainvar : "+tzbcde)
     tzbcdef =  json.dumps("END") 
     print("Here is end : "+tzbcdef)
     for train in data['trains']:
